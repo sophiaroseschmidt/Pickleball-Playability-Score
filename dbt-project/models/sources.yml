@@ -1,0 +1,15 @@
+version: 2
+
+sources:
+  - name: bronze
+    database: pickleball_db
+    schema: bronze
+    tables:
+      - name: raw_weather_data
+        description: "Raw weather API responses"
+        
+      - name: raw_pickleball_courts
+        description: "Raw pickleball court data"
+        
+      - name: api_fetch_log
+        description: "Log of API fetch attempts"

@@ -1,0 +1,13 @@
+finance_project:
+  target: dev
+  outputs:
+    dev:
+      type: postgres
+      host: <your-server-name>.postgres.database.azure.com
+      user: pgadmin
+      password: "{{ env_var('DB_PASSWORD') }}"
+      port: 5432
+      dbname: finance_db
+      schema: public
+      threads: 4
+      sslmode: require  # Important for Azure!

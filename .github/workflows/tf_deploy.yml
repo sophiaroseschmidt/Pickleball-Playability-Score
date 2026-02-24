@@ -1,0 +1,135 @@
+name: Terraform CI/CD Deployment
+
+permissions:
+      checks: write
+      contents: read
+      statuses: write
+      id-token: write # Require write permission to Fetch an OIDC token.
+      pull-requests: write # Required to create a pull request check run.
+
+on:
+
+  workflow_call:
+    inputs:
+      environment:
+        description: 'Environment to deploy'
+        required: true
+        type: string
+        default: "AzureDev"
+      backend_config:
+        required: true
+        type: string
+      varfile_config:
+        required: true
+        type: string
+
+    secrets:
+      AZURE_TENANT_ID:
+        required: true
+      AZURE_SUBSCRIPTION_ID:
+        required: true
+      AZURE_CLIENT_ID:
+        required: true
+      GH_TOKEN:
+        required: true
+      WEBHOOK_SECRET:
+        required: true
+
+jobs:
+
+  tf-plan:
+    name: Terraform Plan - ${{ github.base_ref }}
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'  # Only run on PRs
+    environment: ${{ inputs.environment }}
+    env:
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+      TF_VAR_terraform_shared_rg_name: ${{ vars.RESOURCE_GROUP_NAME }}
+      TF_VAR_region: ${{ vars.REGION }}
+      TF_VAR_region_shortname: ${{ vars.REGION_SHORTNAME }}
+      TF_VAR_storage_account_name: ${{ vars.STORAGE_ACCOUNT_NAME }}
+      TF_VAR_storage_container_name: ${{ vars.STORAGE_CONTAINER_NAME }}
+      TF_VAR_shared_vnet_name: ${{ vars.SHARED_VNET_NAME}}
+      TF_VAR_shared_vnet_resource_group_name: ${{ vars.SHARED_VNET_RESOURCE_GROUP_NAME}}
+      TF_VAR_storage_subnet_name: ${{ vars.STORAGE_SUBNET_NAME}}
+      TF_VAR_storage_private_endpoint_services: ${{ vars.STORAGE_PRIVATE_ENDPOINT_SERVICES}}
+      TF_VAR_private_networking_shortname: ${{ vars.PRIVATE_NETWORKING_SHORTNAME}}
+      TF_VAR_shared_container_registry_name: ${{ vars.CONTAINER_REGISTRY_NAME }}
+      TF_VAR_github_token: ${{ secrets.GH_TOKEN }}
+      TF_VAR_webhook_secret: ${{ secrets.WEBHOOK_SECRET }} 
+
+    steps:
+    - name: Dump GitHub Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+
+    - name: Azure CLI Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+    - name: Terraform Init
+      run: |
+        cd rg-ncu-terraform
+        terraform init -backend-config=${{ inputs.backend_config }}
+    - name: Terraform Plan
+      run: |
+        cd rg-ncu-terraform
+        terraform plan -out=tfplan -var-file=${{ inputs.varfile_config }}
+
+  tf-apply:
+    name: Terraform Apply - ${{ github.ref_name }}
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'  # Only run on PRs
+    environment: ${{ inputs.environment }}
+    env:
+      TF_VAR_tenant_id: ${{ secrets.AZURE_TENANT_ID }}
+      TF_VAR_subscription_id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
+      TF_VAR_terraform_shared_rg_name: ${{ vars.RESOURCE_GROUP_NAME }}
+      TF_VAR_region: ${{ vars.REGION }}
+      TF_VAR_region_shortname: ${{ vars.REGION_SHORTNAME }}
+      TF_VAR_storage_account_name: ${{ vars.STORAGE_ACCOUNT_NAME }}
+      TF_VAR_storage_container_name: ${{ vars.STORAGE_CONTAINER_NAME }}
+      TF_VAR_shared_vnet_name: ${{ vars.SHARED_VNET_NAME}}
+      TF_VAR_shared_vnet_resource_group_name: ${{ vars.SHARED_VNET_RESOURCE_GROUP_NAME}}
+      TF_VAR_storage_subnet_name: ${{ vars.STORAGE_SUBNET_NAME}}
+      TF_VAR_storage_private_endpoint_services: ${{ vars.STORAGE_PRIVATE_ENDPOINT_SERVICES}}
+      TF_VAR_private_networking_shortname: ${{ vars.PRIVATE_NETWORKING_SHORTNAME}}
+      TF_VAR_shared_container_registry_name: ${{ vars.CONTAINER_REGISTRY_NAME }}
+      TF_VAR_github_token: ${{ secrets.GH_TOKEN }}
+      TF_VAR_webhook_secret: ${{ secrets.WEBHOOK_SECRET }}
+
+    steps:
+    - name: Dump GitHub Context
+      env:
+        GITHUB_CONTEXT: ${{ toJSON(github) }}
+      run: echo "$GITHUB_CONTEXT"
+    - name: Azure CLI Login
+      uses: azure/login@v2
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+    - name: Terraform Init
+      run: |
+        cd rg-ncu-terraform
+        terraform init -backend-config=${{ inputs.backend_config }}
+    - name: Terraform Apply
+      run: |
+        cd rg-ncu-terraform
+        terraform apply -auto-approve -var-file=${{ inputs.varfile_config }}
+
+ 
