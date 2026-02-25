@@ -1,6 +1,6 @@
 output "resource_group_name" {
   description = "Name of the resource group"
-  value       = azurerm_resource_group.main.name
+  value       = data.azurerm_resource_group.main.name
 }
 
 output "postgresql_fqdn" {
@@ -10,12 +10,12 @@ output "postgresql_fqdn" {
 
 output "postgresql_database_name" {
   description = "Name of the PostgreSQL database"
-  value       = azurerm_postgresql_flexible_server_database.finance_db.name
+  value       = azurerm_postgresql_flexible_server_database.airflow_db.name
 }
 
 output "connection_string" {
   description = "PostgreSQL connection string"
-  value       = "postgresql://${var.db_admin_username}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${azurerm_postgresql_flexible_server_database.finance_db.name}?sslmode=require"
+  value       = "postgresql://${var.db_admin_username}@${azurerm_postgresql_flexible_server.main.fqdn}:5432/${azurerm_postgresql_flexible_server_database.airflow_db.name}?sslmode=require"
   sensitive   = true
 }
 
@@ -30,7 +30,6 @@ output "key_vault_uri" {
   value       = azurerm_key_vault.main.vault_uri
 }
 
-# ─── Snowflake ─────────────────────────────────────────────────────────────────
 
 output "snowflake_database" {
   description = "Snowflake database name"

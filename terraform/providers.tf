@@ -1,6 +1,11 @@
 terraform {
   required_version = ">= 1.0"
 
+  backend "azurerm" {
+    # Connection details supplied via backend.tfbackend at init time:
+    # terraform init -backend-config=backend.tfbackend
+  }
+
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"

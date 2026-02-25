@@ -1,4 +1,4 @@
-resource_group_name  = "rg-ncu-terraform-shared"
-storage_account_name = "sancudterraformshared"
-container_name       = "sc-ncu-dev-terraform-shared"
-key                  = "rg-ncu-dev-tf-shared.tfstate"
+resource_group_name  = "rg-terraform-state"
+storage_account_name = "sancupickleball"
+container_name       = "tfstate"
+key                  = "pickleball.tfstate"

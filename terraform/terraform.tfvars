@@ -1,15 +1,17 @@
-project_name     = "finance-project"
-environment      = "dev"
-location         = "East US"  # Or: "West US 2", "North Europe", etc.
+project_name      = "pickleball-playability-score"
+resource_group    = "rg-pickleball-playability-score"
+environment       = "dev"
+location          = "Central US"
 db_admin_username = "pgadmin"
-db_admin_password = "YourSecurePassword123!"  # Change this!
+db_admin_password = "zHnwfIJgQCeFyqMd"
 
 # Add your IP address to access database from your computer
 # Find your IP: curl ifconfig.me
 allowed_ip_addresses = [
-  "YOUR_IP_ADDRESS/32"  # Replace with your actual IP
+  "75.162.131.118"
 ]
 
+budget_alert_email = "sophiaroseschmidt@gmail.com"  
 
 tags = {
   Project     = "Pickleball Playability Score"
@@ -17,15 +19,10 @@ tags = {
   ManagedBy   = "Terraform"
 }
 
-# ─── Snowflake ─────────────────────────────────────────────────────────────────
-# Find your account identifier in Snowflake: Admin → Accounts → hover your account
-snowflake_account  = "orgname-accountname"   # e.g. "myorg-myaccount"
-snowflake_username = "your_admin_user"
 
-# Sensitive values — consider using environment variables instead:
-#   export TF_VAR_snowflake_password="..."
-#   export TF_VAR_snowflake_dbt_password="..."
-#   export TF_VAR_snowflake_tableau_password="..."
-snowflake_password          = "CHANGE_ME"
-snowflake_dbt_password      = "CHANGE_ME"
-snowflake_tableau_password  = "CHANGE_ME"
+snowflake_account  = "MFMJQAC-QY30204"  
+snowflake_username = "SOPHIASCHMIDT"
+
+snowflake_password          = "nsUXyti49b1OfDlG"
+snowflake_dbt_password      = "UQK2agl6o9APhZd7"
+snowflake_tableau_password  = "0FQoqgazNVJlC87c"

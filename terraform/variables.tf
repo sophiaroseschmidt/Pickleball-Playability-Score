@@ -6,6 +6,11 @@ variable "tags" {
   type        = map(string)
 }
 
+variable "resource_group" {
+  description = "Name of Azure resource group"
+  type        = string
+}
+
 variable "project_name" {
   description = "Name of the project"
   type        = string
@@ -46,9 +51,9 @@ variable "allowed_ip_addresses" {
   default     = []  # Add your IP here
 }
 
-variable "name_prefix" {
-  default     = "postgresqlfs"
-  description = "Prefix of the resource name."
+variable "budget_alert_email" {
+  description = "Email address to receive budget alerts"
+  type        = string
 }
 
 // Snowflake

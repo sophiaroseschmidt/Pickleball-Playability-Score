@@ -29,11 +29,6 @@ on:
       AZURE_SUBSCRIPTION_ID:
         required: true
       AZURE_CLIENT_ID:
-        required: true
-      GH_TOKEN:
-        required: true
-      WEBHOOK_SECRET:
-        required: true
 
 jobs:
 
@@ -48,7 +43,6 @@ jobs:
       TF_VAR_client_id: ${{ secrets.AZURE_CLIENT_ID }}
       TF_VAR_terraform_shared_rg_name: ${{ vars.RESOURCE_GROUP_NAME }}
       TF_VAR_region: ${{ vars.REGION }}
-      TF_VAR_region_shortname: ${{ vars.REGION_SHORTNAME }}
       TF_VAR_storage_account_name: ${{ vars.STORAGE_ACCOUNT_NAME }}
       TF_VAR_storage_container_name: ${{ vars.STORAGE_CONTAINER_NAME }}
       TF_VAR_shared_vnet_name: ${{ vars.SHARED_VNET_NAME}}
