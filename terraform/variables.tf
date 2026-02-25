@@ -1,7 +1,14 @@
+// Default
+// **********************************
+
+variable "tags" {
+  description = "Tags to apply to resources"
+  type        = map(string)
+}
+
 variable "project_name" {
   description = "Name of the project"
   type        = string
-  default     = "finance-project"
 }
 
 variable "environment" {
@@ -13,13 +20,18 @@ variable "environment" {
 variable "location" {
   description = "Azure region"
   type        = string
-  default     = "East US"  # Change to your preferred region
+  default     = "North Central US"  # Change to your preferred region
 }
+
+// **********************************
+
+// PostgreSQL
+// **********************************
 
 variable "db_admin_username" {
   description = "PostgreSQL admin username"
   type        = string
-  default     = "pgadmin"
+ 
 }
 
 variable "db_admin_password" {
@@ -34,22 +46,40 @@ variable "allowed_ip_addresses" {
   default     = []  # Add your IP here
 }
 
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
-  default = {
-    Project     = "Finance Data Pipeline"
-    Environment = "Development"
-    ManagedBy   = "Terraform"
-  }
-}
-
 variable "name_prefix" {
   default     = "postgresqlfs"
   description = "Prefix of the resource name."
 }
 
-variable "location" {
-  default     = "eastus"
-  description = "Location of the resource."
+// Snowflake
+// **********************************
+
+variable "snowflake_account" {
+  description = "Snowflake account identifier (format: orgname-accountname)"
+  type        = string
 }
+
+variable "snowflake_username" {
+  description = "Snowflake username used by Terraform (needs ACCOUNTADMIN)"
+  type        = string
+}
+
+variable "snowflake_password" {
+  description = "Snowflake password for the Terraform admin user"
+  type        = string
+  sensitive   = true
+}
+
+variable "snowflake_dbt_password" {
+  description = "Password for DBT_USER"
+  type        = string
+  sensitive   = true
+}
+
+variable "snowflake_tableau_password" {
+  description = "Password for TABLEAU_USER"
+  type        = string
+  sensitive   = true
+}
+
+// **********************************

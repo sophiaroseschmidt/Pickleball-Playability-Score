@@ -19,16 +19,6 @@ output "connection_string" {
   sensitive   = true
 }
 
-output "storage_account_name" {
-  description = "Name of the storage account"
-  value       = azurerm_storage_account.raw_data.name
-}
-
-output "storage_account_primary_access_key" {
-  description = "Primary access key for storage account"
-  value       = azurerm_storage_account.raw_data.primary_access_key
-  sensitive   = true
-}
 
 output "key_vault_name" {
   description = "Name of the Key Vault"
@@ -38,4 +28,26 @@ output "key_vault_name" {
 output "key_vault_uri" {
   description = "URI of the Key Vault"
   value       = azurerm_key_vault.main.vault_uri
+}
+
+# ─── Snowflake ─────────────────────────────────────────────────────────────────
+
+output "snowflake_database" {
+  description = "Snowflake database name"
+  value       = snowflake_database.pickleball.name
+}
+
+output "snowflake_warehouse" {
+  description = "Snowflake warehouse name"
+  value       = snowflake_warehouse.main.name
+}
+
+output "snowflake_dbt_user" {
+  description = "Snowflake username for dbt"
+  value       = snowflake_user.dbt.name
+}
+
+output "snowflake_tableau_user" {
+  description = "Snowflake username for Tableau"
+  value       = snowflake_user.tableau.name
 }
