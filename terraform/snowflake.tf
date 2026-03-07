@@ -12,7 +12,7 @@ resource "snowflake_schema" "bronze" {
 resource "snowflake_schema" "silver" {
   database = snowflake_database.pickleball.name
   name     = "SILVER"
-  comment  = "Cleaned and conformed data"
+  comment  = "Cleaned and data"
 }
 
 resource "snowflake_schema" "gold" {
@@ -24,7 +24,7 @@ resource "snowflake_schema" "gold" {
 resource "snowflake_warehouse" "main" {
   name           = "PICKLEBALL_WH"
   warehouse_size = "XSMALL"
-  auto_suspend   = 60   # suspend after 60s of inactivity
+  auto_suspend   = 60   # suspend after 60 seconds of inactivity
   auto_resume    = true
   comment        = "Primary compute warehouse"
 }
