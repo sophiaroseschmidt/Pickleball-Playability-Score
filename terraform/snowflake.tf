@@ -64,12 +64,12 @@ resource "snowflake_user" "tableau" {
 }
 
 resource "snowflake_grant_account_role" "dbt_user" {
-  account_role_name = snowflake_account_role.dbt.name
+  role_name = snowflake_account_role.dbt.name
   user_name = snowflake_user.dbt.name
 }
 
 resource "snowflake_grant_account_role" "tableau_user" {
-  account_role_name = snowflake_account_role.tableau.name
+  role_name = snowflake_account_role.tableau.name
   user_name = snowflake_user.tableau.name
 }
 
