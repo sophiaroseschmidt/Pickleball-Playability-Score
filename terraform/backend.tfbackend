@@ -1,4 +1,4 @@
 resource_group_name  = "rg-terraform-state"
-storage_account_name = "sancupickleball"
+storage_account_name = "sancupickleball2026"
 container_name       = "tfstate"
-key                  = "pickleball.tfstate"
+key                  = "terraform.tfstate"

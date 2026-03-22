@@ -12,7 +12,7 @@ resource "snowflake_schema" "bronze" {
 resource "snowflake_schema" "silver" {
   database = snowflake_database.pickleball.name
   name     = "SILVER"
-  comment  = "Cleaned and conformed data"
+  comment  = "Cleaned and data"
 }
 
 resource "snowflake_schema" "gold" {
@@ -24,19 +24,19 @@ resource "snowflake_schema" "gold" {
 resource "snowflake_warehouse" "main" {
   name           = "PICKLEBALL_WH"
   warehouse_size = "XSMALL"
-  auto_suspend   = 60   # suspend after 60s of inactivity
+  auto_suspend   = 60   # suspend after 60 seconds of inactivity
   auto_resume    = true
   comment        = "Primary compute warehouse"
 }
 
 # SNOWFLAKE ROLES ---------------------------
 
-resource "snowflake_role" "dbt" {
+resource "snowflake_account_role" "dbt" {
   name    = "DBT_ROLE"
   comment = "Role for dbt transformations — write access to all schemas"
 }
 
-resource "snowflake_role" "tableau" {
+resource "snowflake_account_role" "tableau" {
   name    = "TABLEAU_ROLE"
   comment = "Role for Tableau — read-only access to the gold schema"
 }
@@ -46,7 +46,7 @@ resource "snowflake_role" "tableau" {
 resource "snowflake_user" "dbt" {
   name                 = "DBT_USER"
   password             = var.snowflake_dbt_password
-  default_role         = snowflake_role.dbt.name
+  default_role         = snowflake_account_role.dbt.name
   default_warehouse    = snowflake_warehouse.main.name
   default_namespace    = "${snowflake_database.pickleball.name}.${snowflake_schema.silver.name}"
   must_change_password = false
@@ -56,25 +56,25 @@ resource "snowflake_user" "dbt" {
 resource "snowflake_user" "tableau" {
   name                 = "TABLEAU_USER"
   password             = var.snowflake_tableau_password
-  default_role         = snowflake_role.tableau.name
+  default_role         = snowflake_account_role.tableau.name
   default_warehouse    = snowflake_warehouse.main.name
   default_namespace    = "${snowflake_database.pickleball.name}.${snowflake_schema.gold.name}"
   must_change_password = false
   comment              = "Service account for Tableau"
 }
 
-resource "snowflake_grant_role" "dbt_user" {
-  role_name = snowflake_role.dbt.name
+resource "snowflake_grant_account_role" "dbt_user" {
+  role_name = snowflake_account_role.dbt.name
   user_name = snowflake_user.dbt.name
 }
 
-resource "snowflake_grant_role" "tableau_user" {
-  role_name = snowflake_role.tableau.name
+resource "snowflake_grant_account_role" "tableau_user" {
+  role_name = snowflake_account_role.tableau.name
   user_name = snowflake_user.tableau.name
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_warehouse" {
-  role_name  = snowflake_role.dbt.name
+resource "snowflake_grant_privileges_to_account_role" "dbt_warehouse" {
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
@@ -82,8 +82,8 @@ resource "snowflake_grant_privileges_to_role" "dbt_warehouse" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "tableau_warehouse" {
-  role_name  = snowflake_role.tableau.name
+resource "snowflake_grant_privileges_to_account_role" "tableau_warehouse" {
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
@@ -91,8 +91,8 @@ resource "snowflake_grant_privileges_to_role" "tableau_warehouse" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_database" {
-  role_name  = snowflake_role.dbt.name
+resource "snowflake_grant_privileges_to_account_role" "dbt_database" {
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "DATABASE"
@@ -100,8 +100,8 @@ resource "snowflake_grant_privileges_to_role" "dbt_database" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "tableau_database" {
-  role_name  = snowflake_role.tableau.name
+resource "snowflake_grant_privileges_to_account_role" "tableau_database" {
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "DATABASE"
@@ -110,24 +110,24 @@ resource "snowflake_grant_privileges_to_role" "tableau_database" {
 }
 # DBT PRIVILEDGES ---------------------------
 
-resource "snowflake_grant_privileges_to_role" "dbt_schema_bronze" {
-  role_name  = snowflake_role.dbt.name
+resource "snowflake_grant_privileges_to_account_role" "dbt_schema_bronze" {
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE", "CREATE TABLE", "CREATE VIEW", "CREATE STAGE", "MODIFY"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.bronze.name}"
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_schema_silver" {
-  role_name  = snowflake_role.dbt.name
+resource "snowflake_grant_privileges_to_account_role" "dbt_schema_silver" {
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE", "CREATE TABLE", "CREATE VIEW", "CREATE STAGE", "MODIFY"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.silver.name}"
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_schema_gold" {
-  role_name  = snowflake_role.dbt.name
+resource "snowflake_grant_privileges_to_account_role" "dbt_schema_gold" {
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE", "CREATE TABLE", "CREATE VIEW", "CREATE STAGE", "MODIFY"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.gold.name}"
@@ -136,8 +136,8 @@ resource "snowflake_grant_privileges_to_role" "dbt_schema_gold" {
 
 # TABLEAU PERMISSIONS ---------------------------
 
-resource "snowflake_grant_privileges_to_role" "tableau_schema_gold" {
-  role_name  = snowflake_role.tableau.name
+resource "snowflake_grant_privileges_to_account_role" "tableau_schema_gold" {
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["USAGE"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.gold.name}"
@@ -145,8 +145,8 @@ resource "snowflake_grant_privileges_to_role" "tableau_schema_gold" {
 }
 
 # Future grants so Tableau can read tables/views created by dbt in gold
-resource "snowflake_grant_privileges_to_role" "tableau_future_tables" {
-  role_name  = snowflake_role.tableau.name
+resource "snowflake_grant_privileges_to_account_role" "tableau_future_tables" {
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["SELECT"]
   on_schema_object {
     future {
@@ -156,8 +156,8 @@ resource "snowflake_grant_privileges_to_role" "tableau_future_tables" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "tableau_future_views" {
-  role_name  = snowflake_role.tableau.name
+resource "snowflake_grant_privileges_to_account_role" "tableau_future_views" {
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["SELECT"]
   on_schema_object {
     future {
