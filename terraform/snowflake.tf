@@ -64,17 +64,17 @@ resource "snowflake_user" "tableau" {
 }
 
 resource "snowflake_grant_account_role" "dbt_user" {
-  role_name = snowflake_account_role.dbt.name
+  account_role_name = snowflake_account_role.dbt.name
   user_name = snowflake_user.dbt.name
 }
 
 resource "snowflake_grant_account_role" "tableau_user" {
-  role_name = snowflake_account_role.tableau.name
+  account_role_name = snowflake_account_role.tableau.name
   user_name = snowflake_user.tableau.name
 }
 
 resource "snowflake_grant_privileges_to_account_role" "dbt_warehouse" {
-  role_name  = snowflake_account_role.dbt.name
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
@@ -83,7 +83,7 @@ resource "snowflake_grant_privileges_to_account_role" "dbt_warehouse" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "tableau_warehouse" {
-  role_name  = snowflake_account_role.tableau.name
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
@@ -92,7 +92,7 @@ resource "snowflake_grant_privileges_to_account_role" "tableau_warehouse" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "dbt_database" {
-  role_name  = snowflake_account_role.dbt.name
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "DATABASE"
@@ -101,7 +101,7 @@ resource "snowflake_grant_privileges_to_account_role" "dbt_database" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "tableau_database" {
-  role_name  = snowflake_account_role.tableau.name
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "DATABASE"
@@ -111,7 +111,7 @@ resource "snowflake_grant_privileges_to_account_role" "tableau_database" {
 # DBT PRIVILEDGES ---------------------------
 
 resource "snowflake_grant_privileges_to_account_role" "dbt_schema_bronze" {
-  role_name  = snowflake_account_role.dbt.name
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE", "CREATE TABLE", "CREATE VIEW", "CREATE STAGE", "MODIFY"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.bronze.name}"
@@ -119,7 +119,7 @@ resource "snowflake_grant_privileges_to_account_role" "dbt_schema_bronze" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "dbt_schema_silver" {
-  role_name  = snowflake_account_role.dbt.name
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE", "CREATE TABLE", "CREATE VIEW", "CREATE STAGE", "MODIFY"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.silver.name}"
@@ -127,7 +127,7 @@ resource "snowflake_grant_privileges_to_account_role" "dbt_schema_silver" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "dbt_schema_gold" {
-  role_name  = snowflake_account_role.dbt.name
+  account_role_name  = snowflake_account_role.dbt.name
   privileges = ["USAGE", "CREATE TABLE", "CREATE VIEW", "CREATE STAGE", "MODIFY"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.gold.name}"
@@ -137,7 +137,7 @@ resource "snowflake_grant_privileges_to_account_role" "dbt_schema_gold" {
 # TABLEAU PERMISSIONS ---------------------------
 
 resource "snowflake_grant_privileges_to_account_role" "tableau_schema_gold" {
-  role_name  = snowflake_account_role.tableau.name
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["USAGE"]
   on_schema {
     schema_name = "${snowflake_database.pickleball.name}.${snowflake_schema.gold.name}"
@@ -146,7 +146,7 @@ resource "snowflake_grant_privileges_to_account_role" "tableau_schema_gold" {
 
 # Future grants so Tableau can read tables/views created by dbt in gold
 resource "snowflake_grant_privileges_to_account_role" "tableau_future_tables" {
-  role_name  = snowflake_account_role.tableau.name
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["SELECT"]
   on_schema_object {
     future {
@@ -157,7 +157,7 @@ resource "snowflake_grant_privileges_to_account_role" "tableau_future_tables" {
 }
 
 resource "snowflake_grant_privileges_to_account_role" "tableau_future_views" {
-  role_name  = snowflake_account_role.tableau.name
+  account_role_name  = snowflake_account_role.tableau.name
   privileges = ["SELECT"]
   on_schema_object {
     future {
