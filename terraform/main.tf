@@ -119,18 +119,22 @@ resource "azurerm_key_vault_secret" "db_connection_string" {
 
 
 resource "azurerm_consumption_budget_resource_group" "alerts" {
-  name                = "monthly-budget-alert"
-  resource_group_name = data.azurerm_resource_group.main.name
-  amount              = 25
-  time_grain          = "Monthly"
-  start_date          = "2026-03-01T00:00:00Z"
-  end_date            = "2027-03-01T00:00:00Z"
+  name              = "pickleball-budget"
+  resource_group_id = data.azurerm_resource_group.main.id
+
+  amount     = 10
+  time_grain = "Monthly"
+
+  time_period {
+    start_date = "2026-03-01T00:00:00Z"
+    end_date   = "2027-03-01T00:00:00Z"
+  }
 
   notification {
     enabled        = true
+    threshold      = 30
     operator       = "GreaterThan"
-    threshold      = 90
-    contact_emails = [var.budget_alert_email]
+    contact_emails = var.budget_alert_email
   }
 }
 
