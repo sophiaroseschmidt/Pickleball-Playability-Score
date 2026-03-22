@@ -134,7 +134,7 @@ resource "azurerm_consumption_budget_resource_group" "alerts" {
     enabled        = true
     threshold      = 30
     operator       = "GreaterThan"
-    contact_emails = var.budget_alert_email
+    contact_emails = [var.budget_alert_email]
   }
 }
 
