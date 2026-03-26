@@ -2,15 +2,6 @@ project_name      = "pickleball-playability-score"
 resource_group    = "rg-pickleball-playability-score"
 environment       = "dev"
 location          = "Central US"
-db_admin_username = "pgadmin"
-db_admin_password = "zHnwfIJgQCeFyqMd"
-
-# Add your IP address to access database from your computer
-# Find your IP: curl ifconfig.me
-allowed_ip_addresses = [
-  "75.162.131.118"
-]
-
 budget_alert_email = "sophiaroseschmidt@gmail.com"  
 
 tags = {

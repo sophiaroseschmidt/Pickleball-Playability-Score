@@ -30,31 +30,6 @@ variable "location" {
 
 // **********************************
 
-// PostgreSQL
-// **********************************
-
-variable "db_admin_username" {
-  description = "PostgreSQL admin username"
-  type        = string
- 
-}
-
-variable "db_admin_password" {
-  description = "PostgreSQL admin password"
-  type        = string
-  sensitive   = true
-}
-
-variable "allowed_ip_addresses" {
-  description = "List of IP addresses allowed to access the database"
-  type        = list(string)
-  default     = []  # Add your IP here
-}
-
-variable "budget_alert_email" {
-  description = "Email address to receive budget alerts"
-  type        = string
-}
 
 // Snowflake
 // **********************************
