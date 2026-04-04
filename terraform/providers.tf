@@ -27,7 +27,8 @@ provider "azurerm" {
 }
 
 provider "snowflake" {
-  account  = var.snowflake_account  # format: orgname-accountname
+  organization_name = var.snowflake_organization
+  account_name = var.snowflake_account_name
   username = var.snowflake_username
   password = var.snowflake_password
   role     = "ACCOUNTADMIN"         # needs ACCOUNTADMIN to manage roles and users

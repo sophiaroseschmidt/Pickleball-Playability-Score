@@ -34,11 +34,15 @@ variable "location" {
 // Snowflake
 // **********************************
 
-variable "snowflake_account" {
-  description = "Snowflake account identifier (format: orgname-accountname)"
+variable "snowflake_organization" {
+  description = "Snowflake organization name"
   type        = string
 }
 
+variable "snowflake_account_name" {
+  description = "Snowflake account name (without org prefix)"
+  type        = string
+}
 variable "snowflake_username" {
   description = "Snowflake username used by Terraform (needs ACCOUNTADMIN)"
   type        = string

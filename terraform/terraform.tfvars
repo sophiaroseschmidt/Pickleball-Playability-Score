@@ -11,7 +11,8 @@ tags = {
 }
 
 
-snowflake_account  = "MFMJQAC-QY30204"  
+snowflake_organization = "MFMJQAC"
+snowflake_account_name = "QY30204" 
 snowflake_username = "SOPHIASCHMIDT"
 
 snowflake_password          = "nsUXyti49b1OfDlG"
