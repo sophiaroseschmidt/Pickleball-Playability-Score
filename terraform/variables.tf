@@ -28,6 +28,11 @@ variable "location" {
   default     = "North Central US"  # Change to your preferred region
 }
 
+variable "budget_alert_email" {
+  description = "Email address for budget alerts"
+  type        = string
+}
+
 // **********************************
 
 

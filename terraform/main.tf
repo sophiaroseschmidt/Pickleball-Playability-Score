@@ -63,7 +63,7 @@ resource "azurerm_consumption_budget_resource_group" "alerts" {
 # Store Snowflake credentials in Key Vault
 resource "azurerm_key_vault_secret" "snowflake_account" {
   name         = "snowflake-account"
-  value        = var.snowflake_account
+  value        =  "${var.snowflake_organization}-${var.snowflake_account_name}"
   key_vault_id = azurerm_key_vault.main.id
 
   depends_on = [azurerm_key_vault_access_policy.current_user]
@@ -88,7 +88,7 @@ resource "azurerm_key_vault_secret" "snowflake_tableau_password" {
 # Convenience connection string for the Python pipelines
 resource "azurerm_key_vault_secret" "snowflake_dbt_connection" {
   name         = "snowflake-dbt-connection"
-  value        = "snowflake://DBT_USER:${var.snowflake_dbt_password}@${var.snowflake_account}/PICKLEBALL_DB?warehouse=PICKLEBALL_WH"
+  value        = "snowflake://DBT_USER:${var.snowflake_dbt_password}@${var.snowflake_organization}-${var.snowflake_account_name}/PICKLEBALL_DB?warehouse=PICKLEBALL_WH"
   key_vault_id = azurerm_key_vault.main.id
 
   depends_on = [azurerm_key_vault_access_policy.current_user]
