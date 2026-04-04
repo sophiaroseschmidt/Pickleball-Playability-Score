@@ -28,42 +28,26 @@ variable "location" {
   default     = "North Central US"  # Change to your preferred region
 }
 
-// **********************************
-
-// PostgreSQL
-// **********************************
-
-variable "db_admin_username" {
-  description = "PostgreSQL admin username"
-  type        = string
- 
-}
-
-variable "db_admin_password" {
-  description = "PostgreSQL admin password"
-  type        = string
-  sensitive   = true
-}
-
-variable "allowed_ip_addresses" {
-  description = "List of IP addresses allowed to access the database"
-  type        = list(string)
-  default     = []  # Add your IP here
-}
-
 variable "budget_alert_email" {
-  description = "Email address to receive budget alerts"
+  description = "Email address for budget alerts"
   type        = string
 }
+
+// **********************************
+
 
 // Snowflake
 // **********************************
 
-variable "snowflake_account" {
-  description = "Snowflake account identifier (format: orgname-accountname)"
+variable "snowflake_organization" {
+  description = "Snowflake organization name"
   type        = string
 }
 
+variable "snowflake_account_name" {
+  description = "Snowflake account name (without org prefix)"
+  type        = string
+}
 variable "snowflake_username" {
   description = "Snowflake username used by Terraform (needs ACCOUNTADMIN)"
   type        = string

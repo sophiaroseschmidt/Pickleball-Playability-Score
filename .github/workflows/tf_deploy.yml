@@ -19,7 +19,7 @@ jobs:
   terraform-plan:
     name: Terraform Plan
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' # will run on tf plan
     env:
       # Azure auth (OIDC — no client secret needed)
       ARM_CLIENT_ID:       ${{ secrets.AZURE_CLIENT_ID }}
